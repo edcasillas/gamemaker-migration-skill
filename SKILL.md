@@ -1,0 +1,129 @@
+---
+name: migrate-gm4-gm5-gms14
+description: General workflow for migrating legacy Game Maker projects from GM4/GM5 .gmd files into GameMaker Studio 1.4 .gmx projects and onward to modern GameMaker or HTML5. Use when Codex is working on old Game Maker source recovery, GM4 to GM5 conversion, GMS1.4 imports, broken imported Drag and Drop actions, obsolete functions, MIDI/audio conversion for web export, browser export issues, resource-name collisions, or runtime validation of preserved legacy behavior.
+---
+
+# Migrate GM4/GM5/GMS1.4
+
+Use this skill for legacy Game Maker migration work across projects. Keep project-specific discoveries in the target repository's docs or agent guidance unless they generalize across migrations.
+
+Use it to preserve and migrate old Game Maker projects through:
+
+1. Game Maker 4 `.gmd`
+2. Game Maker 5 `.gmd`
+3. GameMaker Studio 1.4 `.gmx`
+4. Modern GameMaker / HTML5 export
+
+If the migration starts from a Game Maker 4.x `.gmd`, read `references/conv4to5.md` for the bundled internal GM4 -> GM5 converter and preservation workflow.
+
+## Core Rules
+
+- Preserve historical source files. Treat original `.gmd`, converter tools, archived assets, and reference builds as artifacts.
+- Make migration edits in the active imported project, not the original recovered source, unless the user explicitly asks.
+- Prefer small, reviewable fixes over broad rewrites.
+- Preserve original behavior when it is clear.
+- When behavior is unclear, add a searchable TODO/debug placeholder and document the follow-up.
+- Hard rule: do not guess root causes for runtime/compile fixes. Require evidence from current logs plus exact object/event/script trace, or a reproducible path, before changing behavior.
+- For web targets, avoid blocking waits, input loops, platform-specific filesystem assumptions, and thread-blocking timing behavior.
+- Use meaningful, traceable names for migration helpers. Avoid vague names like `obsolete`/`tmp`/`fix`.
+- Treat any named project, reference repo, character, room, spell, or resource below as an example unless the active repository explicitly defines it as local guidance.
+
+## Workflow
+
+1. Identify the active project and preservation boundary.
+2. Read the latest compile log, browser console output, or user reproduction steps.
+3. Map generated GMS error names back to source resources:
+   - `gml_Object_<object>_<event>` usually maps to `objects/<object>.object.gmx`.
+   - Generated event line numbers often point to imported action blocks, not a visible editor error.
+4. Inspect the object event/action XML or script file directly.
+5. Infer original behavior from nearby actions, resource names, rooms, preserved source, or a reference build.
+6. Patch the smallest compatible behavior.
+7. Rebuild or ask the user for a new compile/runtime log.
+8. Update the project dev log or migration notes when the fix changes migration behavior.
+
+## Compile Fixes
+
+For common imported-code failures, read `references/gm-legacy-patterns.md`.
+
+Typical fixes include:
+
+- Rename scripts that shadow built-ins, such as a user script named `random`.
+- Rename scripts with spaces so generated calls compile as single identifiers.
+- Replace broken Drag and Drop actions with equivalent GML when the original behavior is clear.
+- For legacy DnD Sleep imports (action id `302`) that open as unknown/obsolete actions in GMS1.4, convert them to `action_execute_script` (`id 601`) calling a dedicated bridge script with the same first two arguments (`duration_ms`, legacy redraw flag). Use a project-appropriate traceable name, for example `sc_legacy_sleep`, and document all affected objects.
+- Treat legacy sleep bridge scripts as interim compatibility only. Final target (modern GameMaker phase) should be non-blocking timed actions, such as a wait-for-seconds/steps queue with callbacks. If the repository names a reference project, inspect it for architecture patterns but do not copy systems blindly.
+- Add temporary compatibility scripts only when they unblock compile and are clearly documented.
+- Replace blank numeric imported arguments with a conservative `0` only when the intended blank value means no offset/speed.
+- For resource name collisions, verify the actual asset before changing references. Project-tree folder names can be misleading after import.
+- When a collision requires a rename, first follow the active repository's naming convention. If none exists, use the default convention from `references/gm-legacy-patterns.md`: two-character resource prefix plus underscore, such as `sp_`, `ob_`, or `rm_`.
+- Treat GM5 group paths as non-unique metadata after import. Same-name resources from different GM5 groups can collapse into one GMS1 resource identity.
+- If baseline shows same-name resources with different behavior (for example pickup object vs cast projectile), split them into explicit unique GMS1 resource names first, then rewire call sites by behavior path.
+- After large rename batches, re-open in GMS1.4 and treat missing-resource startup dialogs as a relinking checklist. Prioritize stale Execute Script arguments and resource tags in object XML before doing broader runtime debugging.
+- When fixing player action, spell, or sprite-cast branches in imported object XML, validate the affected input path immediately in runtime after each small edit. Compile-success alone is not enough.
+- If duplicate texture-page names appear (for example duplicate `*.tpe` names), inspect the active `.project.gmx` file for repeated `<sprite>...</sprite>` entries across multiple folders and remove only duplicated project-tree listings, not real sprite files.
+- For character-specific sprite isolation, do not use broad project-wide text replacement. Apply scoped edits per object/resource and verify unrelated groups are unchanged.
+- For meaningful semantic/identity renames, update the active repository's historical rename log or migration notes in the same batch so old/new references remain traceable during migration.
+- Always run two separate audits after rename passes: (1) tree structure audit against the baseline import and (2) sprite-content audit (frame references, dimensions, and optional hash checks) to catch wrong-image reuse.
+- After replacing legacy `OLD: Change sprite` actions, scan object XML for unresolved placeholders (`<sprite>-100</sprite>`, `<object>-100</object>`, `<undefined>`). Resolve each by branch intent, such as directional state mappings, before trusting compile success.
+- Apply-target hardening:
+  - Treat `whoName`/`useapplyto` as gameplay semantics, not cleanup formatting.
+  - Do not batch-convert `<whoName>&lt;undefined&gt;</whoName>` to `self`.
+  - In Destroy/Collision flows (especially `action_kill_object` and sprite/object setters), require legacy-behavior verification before changing targets.
+  - When GM5 reference exists, compare target ownership there before finalizing.
+- For every compatibility script, require a non-ambiguous header comment that states:
+  - original replaced action/function (include action id when known),
+  - argument contract and units,
+  - known current call sites,
+  - temporary vs final intent.
+- Avoid formatting churn in GMX/XML:
+  - Do not run broad normalization/reformatting passes while fixing logic.
+  - Apply surgical edits to the exact nodes involved in the bug/fix.
+  - Before closing a batch, inspect unstaged diffs and classify each file as semantic change vs autosave formatting change.
+  - Exclude whitespace/tag-shape/line-ending-only changes from the fix batch unless the user explicitly requests normalization.
+
+## Browser Runtime Validation
+
+For HTML5/browser runtime work, read `references/html5-runtime-validation.md`.
+
+Prioritize:
+
+- title/menu flow
+- player movement and collision
+- character sprite correctness
+- room transitions
+- cutscenes and wait/pause logic
+- drawing/HUD visibility
+- audio playback and looping
+- combat, magic, enemy behavior
+- ending/game-over flows
+
+## MIDI Music Migration
+
+For legacy GM4/GM5/GMS1.4 music that uses `.mid` or `.midi` files, especially for HTML5/web export, read `references/audio-midi-to-mp3.md`.
+
+Migration rules:
+
+- Treat source MIDI files as preserved assets.
+- Render MIDI to browser-compatible audio with FluidSynth, FFmpeg, and a documented SoundFont.
+- If the selected SoundFont is missing, use the bundled fetch script before asking the user to provide one.
+- Stage generated MP3/OGG/WAV files outside the active `.gmx` project tree until the import/relink step is intentional.
+- In GMS1.4 projects, inspect `sound/*.sound.gmx` to identify registered MIDI resources instead of blindly converting every loose file in `sound/audio/`.
+- Document the SoundFont source/license/checksum and note that MIDI rendering can differ from the original system MIDI playback.
+- After importing converted audio into GameMaker, validate music playback, looping, room transitions, and browser audio unlock behavior.
+
+## Dev Log Notes
+
+Record meaningful migration decisions with:
+
+- what broke
+- where it broke: object, event, script, room, or imported action
+- what original behavior appeared to be
+- what changed
+- whether the fix is temporary or final
+- follow-up validation needed
+
+## Sensitive Resource Families
+
+Preserve all resources for player powers, playable characters, major NPCs, enemies, bosses, menu systems, story/cutscene controllers, rooms, backgrounds, sounds, and endings unless the user explicitly approves removal.
+
+When cleaning duplicate resource names, keep every distinct gameplay resource present until its behavior and references have been validated. Same-name resources may represent different families, such as pickup vs projectile, menu vs room controller, or character-specific movement sprites.

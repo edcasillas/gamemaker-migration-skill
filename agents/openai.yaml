@@ -1,0 +1,4 @@
+interface:
+  display_name: "Legacy Game Maker Migration"
+  short_description: "Migrate legacy Game Maker projects safely."
+  default_prompt: "Use $migrate-gm4-gm5-gms14 to migrate a legacy Game Maker project through GM4, GM5, GMS1.4, and modern GameMaker while preserving original behavior."
