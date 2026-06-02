@@ -16,7 +16,7 @@ Use it to preserve and migrate old Game Maker projects through:
 
 If the migration starts from a Game Maker 4.x `.gmd`, read `references/conv4to5.md` for the bundled internal GM4 -> GM5 converter and preservation workflow.
 
-For a compact historical example of GM5/GMS1.4 -> GMS2/HTML5 fixes, read `references/fantasma-migration-lessons.md`. Treat it as evidence-backed examples, not active-project canon.
+For a compact historical example of GM5/GMS1.4 -> GMS2/HTML5 fixes organized by migration phase, read `references/fantasma-migration-lessons.md`. Treat it as evidence-backed examples, not active-project canon.
 
 ## Core Rules
 
@@ -33,15 +33,16 @@ For a compact historical example of GM5/GMS1.4 -> GMS2/HTML5 fixes, read `refere
 ## Workflow
 
 1. Identify the active project and preservation boundary.
-2. Read the latest compile log, browser console output, or user reproduction steps.
-3. Map generated GMS error names back to source resources:
+2. Identify the active migration hop, such as GM4 -> GM5, GM4/GM5 -> GMS1.4, GMS1.4 -> modern GameMaker, or modern GameMaker -> HTML5.
+3. Read the latest compile log, browser console output, or user reproduction steps.
+4. Map generated GMS error names back to source resources:
    - `gml_Object_<object>_<event>` usually maps to `objects/<object>.object.gmx`.
    - Generated event line numbers often point to imported action blocks, not a visible editor error.
-4. Inspect the object event/action XML or script file directly.
-5. Infer original behavior from nearby actions, resource names, rooms, preserved source, or a reference build.
-6. Patch the smallest compatible behavior.
-7. Rebuild or ask the user for a new compile/runtime log.
-8. Update the project dev log or migration notes when the fix changes migration behavior.
+5. Inspect the object event/action XML or script file directly.
+6. Infer original behavior from nearby actions, resource names, rooms, preserved source, or a reference build.
+7. Patch the smallest compatible behavior.
+8. Rebuild or ask the user for a new compile/runtime log.
+9. Update the project dev log or migration notes when the fix changes migration behavior.
 
 ## Compile Fixes
 
