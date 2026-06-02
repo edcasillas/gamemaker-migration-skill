@@ -1,5 +1,5 @@
 ---
-name: migrate-gm4-gm5-gms14
+name: gamemaker-migration-assistant
 description: General workflow for migrating legacy Game Maker projects from GM4/GM5 .gmd files into GameMaker Studio 1.4 .gmx projects and onward to modern GameMaker or HTML5. Use when Codex is working on old Game Maker source recovery, GM4 to GM5 conversion, GMS1.4 imports, broken imported Drag and Drop actions, obsolete functions, MIDI/audio conversion for web export, browser export issues, resource-name collisions, or runtime validation of preserved legacy behavior.
 ---
 
