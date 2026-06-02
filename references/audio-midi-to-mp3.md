@@ -77,6 +77,8 @@ When `-GmxSoundDir` is provided, the script reads `*.sound.gmx` files and conver
 - For GMS1.4, inspect `sound/*.sound.gmx` to distinguish active registered MIDI resources from duplicate loose files in `sound/audio/`.
 - Keep source MIDI files in place for provenance and future re-rendering with a different SoundFont.
 - If converted MP3 files are imported into GameMaker, update sound metadata deliberately and inspect GMX diffs for unrelated editor churn.
+- Update sound kind, extension, data file, compression, and streaming metadata together. A resource that still points at `.mid` while the audio file has been converted is not migrated.
+- Watch for legacy logic that polls whether music is playing on every key press or movement input. Replace it with a single background-music helper that owns stop/start/loop behavior.
 
 ## Validation
 
@@ -86,6 +88,7 @@ Validate:
 - music starts only after acceptable browser audio unlock behavior
 - looped music restarts correctly after room changes
 - ending/cutscene cue points still match expected timing
+- title/intro flows that advance on audio-ended events have a timeout or no-audio fallback
 - converted output has been auditioned against an original executable, reference capture, or original MIDI playback when available
 
 ## Failure Modes

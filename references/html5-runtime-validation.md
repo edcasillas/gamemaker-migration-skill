@@ -34,6 +34,8 @@ Do not restore these with blocking loops for HTML5. Use:
 - cutscene controllers
 - room transition controllers
 
+If old timing depended on audio duration or an audio-ended event, add a fallback timeout and a no-sound path. Browser audio can fail to start or can be blocked until user interaction.
+
 ### Pause screens
 
 Prefer a pause state:
@@ -59,6 +61,8 @@ Replace "wait, draw, wait, advance" scripts with:
 Validate:
 
 - browser starts audio only after acceptable user interaction
+- `audio_play_sound` returning no valid handle does not deadlock a menu, intro, or cutscene
+- audio-ended events advance only the intended flow and clear any fallback alarms/timers
 - looped music restarts correctly after room changes
 - one-shot effects do not loop accidentally
 - legacy MIDI music has been rendered to a browser-compatible format with a documented SoundFont
@@ -69,6 +73,28 @@ Validate:
 
 Validate keyboard constants and browser focus behavior. Check that menu/pause controls do not depend on blocking input waits.
 
+### Views, fullscreen, and resize
+
+Old rooms can depend on multiple active views, fixed room surfaces, or GUI drawn in room coordinates. HTML5 can expose problems that are invisible in the desktop runner.
+
+Validate:
+
+- combined visible viewport sizes fit the game surface or application surface
+- HUD/status views do not squeeze or crop the main play view
+- Draw GUI content still appears in fullscreen and after browser resize
+- fullscreen support is disabled or fixed when GUI scaling cannot be trusted
+- resize callbacks, if used, bridge JavaScript events into GML through explicit script names
+
+### Mobile browser policy
+
+If mobile play is unsupported, fail intentionally instead of letting the game run broken.
+
+Validate:
+
+- mobile detection happens before gameplay timers, analytics, or audio-dependent flows create inconsistent state
+- the disabled-canvas or unsupported-device message is visible
+- clearing browser timers or hiding the canvas does not prevent required analytics or logging from completing unless that tradeoff is intentional
+
 ## Smoke Test Checklist
 
 - Game starts without runtime errors.
@@ -77,6 +103,8 @@ Validate keyboard constants and browser focus behavior. Check that menu/pause co
 - Collision does not trap or drift the player.
 - Room transitions work.
 - HUD and draw layers are visible.
+- Fullscreen/resize behavior does not corrupt GUI placement.
+- Unsupported mobile behavior is explicit, if mobile is out of scope.
 - Music and effects play acceptably.
 - Magic/combat works at a basic level.
 - Enemies move, collide, and die as expected.

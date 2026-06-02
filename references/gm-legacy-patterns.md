@@ -10,6 +10,45 @@ This reference collects migration patterns that have generalized across legacy G
 
 ## Common Compile Errors
 
+### Generated compatibility scripts from GMS import
+
+Symptom:
+
+- Import creates scripts such as `action_another_room`, `action_change_object`, `action_sound`, `action_if_variable`, or `__init_global`.
+- The migrated project compiles only while these wrappers remain.
+- Runtime logic is hard to reason about because important behavior is hidden behind old Drag and Drop compatibility names.
+
+Cause:
+
+- GMS importers preserve old Drag and Drop behavior by generating compatibility scripts instead of converting every action to idiomatic GML.
+
+Fix strategy:
+
+- Keep generated compatibility scripts during the first compile pass.
+- Use the import compatibility report to list every generated wrapper and missing conversion string.
+- Replace wrappers one call site at a time once intent is clear.
+- Prefer native modern calls for obvious equivalents, such as `room_goto(target_room)` for `action_another_room(target_room)` and `instance_change(obj, perform_events)` for `action_change_object(obj, perform_events)`.
+- Delete a compatibility script only after searching the active project for remaining references.
+- Keep wrappers for ambiguous actions until runtime behavior is verified.
+
+### Unsupported legacy save/highscore APIs on HTML5
+
+Symptom:
+
+- Legacy progression uses `action_save_game`, `game_save`, `game_load`, or built-in highscore UI.
+- HTML5 export fails, no-ops, or produces runtime behavior that cannot be relied on in-browser.
+
+Cause:
+
+- Old desktop Game Maker APIs assumed local filesystem or built-in UI behavior that is not portable to HTML5.
+
+Fix strategy:
+
+- Remove save/load calls from progression paths when they are not required for the preserved game loop.
+- If persistence is required, replace with an explicit browser-safe or service-backed design.
+- Replace built-in highscore UI with project-owned UI and a storage/service integration.
+- Validate the affected progression path in the browser, not just in the IDE runner.
+
 ### Duplicate resource names after import
 
 Symptom:
@@ -141,6 +180,8 @@ show_debug_message("TODO MIGRATION: Legacy obsolete action skipped");
 Runtime follow-up:
 
 - Replace with non-blocking state, Step, Draw, Alarm, or controller logic.
+
+If the obsolete action represented a sleep/wait with redraw, preserve the user-visible timing separately from the blocking mechanism. Validate cutscenes, death/game-over transitions, and level-change delays after replacement.
 
 ### Broken movement DnD action
 

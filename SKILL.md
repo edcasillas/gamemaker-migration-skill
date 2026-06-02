@@ -16,6 +16,8 @@ Use it to preserve and migrate old Game Maker projects through:
 
 If the migration starts from a Game Maker 4.x `.gmd`, read `references/conv4to5.md` for the bundled internal GM4 -> GM5 converter and preservation workflow.
 
+For a compact historical example of GM5/GMS1.4 -> GMS2/HTML5 fixes, read `references/fantasma-migration-lessons.md`. Treat it as evidence-backed examples, not active-project canon.
+
 ## Core Rules
 
 - Preserve historical source files. Treat original `.gmd`, converter tools, archived assets, and reference builds as artifacts.
@@ -52,7 +54,9 @@ Typical fixes include:
 - Replace broken Drag and Drop actions with equivalent GML when the original behavior is clear.
 - For legacy DnD Sleep imports (action id `302`) that open as unknown/obsolete actions in GMS1.4, convert them to `action_execute_script` (`id 601`) calling a dedicated bridge script with the same first two arguments (`duration_ms`, legacy redraw flag). Use a project-appropriate traceable name, for example `sc_legacy_sleep`, and document all affected objects.
 - Treat legacy sleep bridge scripts as interim compatibility only. Final target (modern GameMaker phase) should be non-blocking timed actions, such as a wait-for-seconds/steps queue with callbacks. If the repository names a reference project, inspect it for architecture patterns but do not copy systems blindly.
+- Do not keep generated compatibility scripts longer than necessary. Once call sites are understood, replace wrappers such as `action_another_room` and `action_change_object` with native modern calls like `room_goto` and `instance_change`, then delete the compatibility script from the active project.
 - Add temporary compatibility scripts only when they unblock compile and are clearly documented.
+- Remove or replace legacy save/highscore APIs when the target platform does not support them. For HTML5, old save/load/highscore calls usually need browser-safe storage, online services, or removal from the migrated flow.
 - Replace blank numeric imported arguments with a conservative `0` only when the intended blank value means no offset/speed.
 - For resource name collisions, verify the actual asset before changing references. Project-tree folder names can be misleading after import.
 - When a collision requires a rename, first follow the active repository's naming convention. If none exists, use the default convention from `references/gm-legacy-patterns.md`: two-character resource prefix plus underscore, such as `sp_`, `ob_`, or `rm_`.
@@ -89,11 +93,14 @@ Prioritize:
 
 - title/menu flow
 - player movement and collision
+- viewport/camera behavior in rooms with multiple views or HUD viewports
 - character sprite correctness
 - room transitions
 - cutscenes and wait/pause logic
 - drawing/HUD visibility
+- fullscreen, resize, and canvas behavior
 - audio playback and looping
+- audio-ended flows and fallback timeouts when progression waits for playback completion
 - combat, magic, enemy behavior
 - ending/game-over flows
 

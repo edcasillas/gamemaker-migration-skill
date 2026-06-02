@@ -31,6 +31,8 @@ Bundled supporting material lives in:
 - `assets/` for bundled tools and other non-context assets.
 - `agents/` for UI metadata.
 
+`references/fantasma-migration-lessons.md` is an evidence-backed case study of a successful GM5/GMS1.4 -> GMS2/HTML5 migration. Use it for reusable migration patterns, not as active-project guidance.
+
 ## Notes For Maintainers
 
 Keep project-specific migration discoveries in the target project repo, not here, unless they generalize across legacy Game Maker migrations.
