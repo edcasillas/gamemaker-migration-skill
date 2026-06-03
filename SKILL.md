@@ -28,6 +28,7 @@ For a compact historical example of GM5/GMS1.4 -> GMS2/HTML5 fixes organized by 
 - Hard rule: do not guess root causes for runtime/compile fixes. Require evidence from current logs plus exact object/event/script trace, or a reproducible path, before changing behavior.
 - For web targets, avoid blocking waits, input loops, platform-specific filesystem assumptions, and thread-blocking timing behavior.
 - Use meaningful, traceable names for migration helpers. Avoid vague names like `obsolete`/`tmp`/`fix`.
+- If a required local tool is missing, do not silently switch to a weaker workflow. State the missing tool, ask whether it can be installed, and use a manual or limited fallback only if the user declines the install, the install fails, or the tool is unavailable for the current machine.
 - Treat any named project, reference repo, character, room, spell, or resource below as an example unless the active repository explicitly defines it as local guidance.
 
 ## Workflow
