@@ -36,6 +36,7 @@ Fix strategy:
 Symptom:
 
 - Legacy progression uses `action_save_game`, `game_save`, `game_load`, or built-in highscore UI.
+- The GM4/GM5 Drag and Drop action `Show the highscore table` may import into GMS1.4 silently as `Unknown Action`, without a visible import error.
 - HTML5 export fails, no-ops, or produces runtime behavior that cannot be relied on in-browser.
 
 Cause:
@@ -48,6 +49,46 @@ Fix strategy:
 - If persistence is required, replace with an explicit browser-safe or service-backed design.
 - Replace built-in highscore UI with project-owned UI and a storage/service integration.
 - Validate the affected progression path in the browser, not just in the IDE runner.
+
+### Silent Unknown Action imports
+
+Symptom:
+
+- GMS1.4 opens an imported Drag and Drop block as `Unknown Action`.
+- The importer did not report an error, warning, or actionable migration message.
+- Object XML may preserve a related legacy function name or suspicious empty action function that only becomes obvious during XML inspection.
+- Maintainers may also add manual comment blocks such as `OBSOLETE:` or `LEGACY:` after removing an action; those strings are cleanup notes, not proof of what the importer originally emitted.
+
+Known examples:
+
+- `Show the highscore table`
+- `Set a font for drawing text`
+- `Set the fill color`
+
+Detection:
+
+Run an XML sweep across imported objects before assuming the import is clean. Use the active project path:
+
+```powershell
+Select-String -Path .\objects\*.object.gmx -Pattern `
+  '<functionname>action_highscore</functionname>|<functionname>action_draw_font_old</functionname>|<functionname>action_fill_color</functionname>|<functionname></functionname>' `
+  -Context 8,8
+```
+
+If a project uses manual migration note comments, run a second sweep so the notes remain traceable:
+
+```powershell
+Select-String -Path .\objects\*.object.gmx -Pattern '<string>OBSOLETE:|<string>LEGACY:' -Context 4,4
+```
+
+Then inspect each full `<action>` block and record the object, event type, action id, function name, and arguments. If the GM4/GM5 source is available, compare the original action directly before replacing behavior.
+
+Fix strategy:
+
+- For `Show the highscore table`, do not rely on the old built-in leaderboard UI. Remove it if the score screen is not required for preservation, or replace it with project-owned UI plus browser-safe storage/service integration.
+- For `Set a font for drawing text`, create or reuse a registered font resource and replace the action with `draw_set_font(font_resource)` near the drawing code. Preserve the visible typeface, size, bold/italic settings, and alignment intent when those arguments survived import.
+- For `Set the fill color`, replace it with `draw_set_color(color_value)` before the affected draw call. Preserve the imported numeric color value and validate that rectangle/text drawing still uses the intended state.
+- Keep temporary placeholders searchable with `TODO MIGRATION:` only when the original behavior is unclear, and document the follow-up validation path.
 
 ### Duplicate resource names after import
 
