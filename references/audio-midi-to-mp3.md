@@ -41,6 +41,8 @@ Before public distribution, re-check the current package/license metadata and pa
 7. Audition converted tracks where possible. MIDI output depends on the SoundFont and can differ from old system MIDI playback.
 8. Document source files, output files, SoundFont metadata, tool versions when available, and follow-up validation in the project migration log.
 
+If `ffprobe` or `ffmpeg` is missing and metrics or conversion are required, ask whether the tool can be installed before using a weaker fallback. Use the fallback only if installation is declined, fails, or is unavailable on the current machine.
+
 ## Script Usage
 
 General conversion:
@@ -78,6 +80,9 @@ When `-GmxSoundDir` is provided, the script reads `*.sound.gmx` files and conver
 - Keep source MIDI files in place for provenance and future re-rendering with a different SoundFont.
 - If converted MP3 files are imported into GameMaker, update sound metadata deliberately and inspect GMX diffs for unrelated editor churn.
 - Update sound kind, extension, data file, compression, and streaming metadata together. A resource that still points at `.mid` while the audio file has been converted is not migrated.
+- For modern `.yyp` projects, prefer ResourceTool `SOUND SETFILE NAME=<sound> PATH=<audio-file>` to relink a sound resource. This updates the registered resource metadata and copies the audio file into the sound resource folder.
+- After `SOUND SETFILE`, inspect the sound resource folder. ResourceTool may leave the old linked audio file in place, so remove stale MIDI files only when the project owner has approved that preservation boundary.
+- If a modern `gm-cli` compile fails in asset compilation with only a final non-zero status, rerun with `--verbose`; audio conversion failures can be visible only in the verbose compiler log.
 - Watch for legacy logic that polls whether music is playing on every key press or movement input. Replace it with a single background-music helper that owns stop/start/loop behavior.
 
 ## Validation
@@ -85,6 +90,9 @@ When `-GmxSoundDir` is provided, the script reads `*.sound.gmx` files and conver
 Validate:
 
 - converted files exist for every active registered MIDI resource
+- `ffprobe` metrics were captured for converted files when duration, codec, or sample-rate evidence matters
+- modern sound resources point to rendered audio filenames, not MIDI filenames or extensionless MIDI files
+- the target `gm-cli compile` succeeds after relinking
 - music starts only after acceptable browser audio unlock behavior
 - looped music restarts correctly after room changes
 - ending/cutscene cue points still match expected timing

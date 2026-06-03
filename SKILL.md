@@ -124,7 +124,8 @@ Migration rules:
 - Stage generated MP3/OGG/WAV files outside the active `.gmx` project tree until the import/relink step is intentional.
 - In GMS1.4 projects, inspect `sound/*.sound.gmx` to identify registered MIDI resources instead of blindly converting every loose file in `sound/audio/`.
 - Document the SoundFont source/license/checksum and note that MIDI rendering can differ from the original system MIDI playback.
-- After importing converted audio into GameMaker, validate music playback, looping, room transitions, and browser audio unlock behavior.
+- For modern `.yyp` projects, relink rendered audio through GameMaker/ResourceTool metadata, not by only copying files. With `gm-cli`, use ResourceTool `SOUND SETFILE NAME=<sound> PATH=<audio-file>`, then inspect the resource folder because the old linked file may remain on disk.
+- After importing converted audio into GameMaker, compile the target platform, then validate music playback, looping, room transitions, and browser audio unlock behavior.
 
 ## Dev Log Notes
 
