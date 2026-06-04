@@ -18,6 +18,30 @@ If the migration starts from a Game Maker 4.x `.gmd`, read `references/conv4to5.
 
 For a compact historical example of GM5/GMS1.4 -> GMS2/HTML5 fixes organized by migration phase, read `references/fantasma-migration-lessons.md`. Treat it as evidence-backed examples, not active-project canon.
 
+## Optional Companion Skill
+
+For current GameMaker command-line development, use the optional companion skill `gamemaker-development`.
+
+Companion repository:
+
+```text
+https://github.com/edcasillas/gamemaker-development-skill
+```
+
+Install it as a direct checkout:
+
+```sh
+git clone https://github.com/edcasillas/gamemaker-development-skill.git .agents/skills/gamemaker-development
+```
+
+Or install it as a Git submodule:
+
+```sh
+git submodule add https://github.com/edcasillas/gamemaker-development-skill.git .agents/skills/gamemaker-development
+```
+
+Use `gamemaker-development` for current `.yyp` workflows, `gm-cli`, ResourceTool, GameMaker Manual lookup, compile/run/package automation, and GX.Games packaging or publishing. This companion skill is optional; this migration skill remains standalone for legacy preservation and migration work.
+
 ## Core Rules
 
 - Preserve historical source files. Treat original `.gmd`, converter tools, archived assets, and reference builds as artifacts.

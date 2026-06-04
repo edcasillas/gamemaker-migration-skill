@@ -33,6 +33,28 @@ Bundled supporting material lives in:
 
 `references/fantasma-migration-lessons.md` is an evidence-backed case study of a successful GM5/GMS1.4 -> GMS2/HTML5 migration. Use it for reusable migration patterns, not as active-project guidance.
 
+## Optional Companion Skill
+
+For current GameMaker command-line development, `.yyp` compile/run/package workflows, ResourceTool, GameMaker Manual lookup, and GX.Games packaging or publishing, use the optional companion skill:
+
+```text
+https://github.com/edcasillas/gamemaker-development-skill
+```
+
+Install it as a direct checkout:
+
+```sh
+git clone https://github.com/edcasillas/gamemaker-development-skill.git .agents/skills/gamemaker-development
+```
+
+Or install it as a Git submodule:
+
+```sh
+git submodule add https://github.com/edcasillas/gamemaker-development-skill.git .agents/skills/gamemaker-development
+```
+
+Both skills are independent. Install only the one that matches the project work, or install both when a project needs legacy migration guidance and modern GameMaker CLI workflows.
+
 ## Notes For Maintainers
 
 Keep project-specific migration discoveries in the target project repo, not here, unless they generalize across legacy Game Maker migrations.
