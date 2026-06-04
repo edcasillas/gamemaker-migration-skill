@@ -69,6 +69,24 @@ Validate:
 - imported converted audio plays on target browser
 - converted music loops and transitions acceptably compared with original behavior
 
+### Console and file probes
+
+Chrome console 404s in generated GameMaker HTML5 code are not always broken
+assets. On HTML5, `file_exists()` can check browser storage first and then issue
+a visible `HEAD` request for `html5game/<filename>` before returning false.
+
+When triaging console noise:
+
+- confirm whether the page is an IDE runner URL such as
+  `http://localhost:<port>/` or an exported build folder
+- map the generated JavaScript source line back to GML calls such as
+  `file_exists`, `file_text_open_read`, `ds_map_secure_load`, or CSV loading
+- preserve intended dev fallbacks, especially build-number fallbacks, instead
+  of adding placeholder files that can become stale
+- do not assume a GameMaker IDE HTML5 run uses the DevBuild config; config or
+  macro state can differ from the fact that the runner is local
+- treat first-run settings-file 404s separately from missing asset 404s
+
 ### Input
 
 Validate keyboard constants and browser focus behavior. Check that menu/pause controls do not depend on blocking input waits.
