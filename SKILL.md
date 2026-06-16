@@ -7,6 +7,11 @@ description: General workflow for migrating legacy Game Maker projects from GM4/
 
 Use this skill for legacy Game Maker migration work across projects. Keep project-specific discoveries in the target repository's docs or agent guidance unless they generalize across migrations.
 
+This skill must remain generic and reusable across migrations. Do not encode
+specific game names, named characters, rooms, factions, or repository-local
+canon into the skill body or its durable references. If a migration produced a
+useful lesson, generalize and anonymize it before keeping it here.
+
 Use it to preserve and migrate old Game Maker projects through:
 
 1. Game Maker 4 `.gmd`
@@ -15,8 +20,6 @@ Use it to preserve and migrate old Game Maker projects through:
 4. Modern GameMaker / HTML5 export
 
 If the migration starts from a Game Maker 4.x `.gmd`, read `references/conv4to5.md` for the bundled internal GM4 -> GM5 converter and preservation workflow.
-
-For a compact historical example of GM5/GMS1.4 -> GMS2/HTML5 fixes organized by migration phase, read `references/fantasma-migration-lessons.md`. Treat it as evidence-backed examples, not active-project canon.
 
 ## Optional Companion Skill
 
