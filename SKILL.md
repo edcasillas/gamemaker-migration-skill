@@ -15,6 +15,8 @@ useful lesson, generalize and anonymize it before keeping it here.
 When writing durable migration documentation, keep it complete but concise.
 Prefer short quickstarts, tables where they genuinely improve scanability, and
 diagrams wherever they add real explanatory value.
+Avoid repeated boilerplate across related documents; keep shared workflow rules
+in the owner document and use child docs for specifics.
 
 Use it to preserve and migrate old Game Maker projects through:
 
