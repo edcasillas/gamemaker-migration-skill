@@ -12,6 +12,10 @@ specific game names, named characters, rooms, factions, or repository-local
 canon into the skill body or its durable references. If a migration produced a
 useful lesson, generalize and anonymize it before keeping it here.
 
+When writing durable migration documentation, keep it complete but concise.
+Prefer short quickstarts, tables where they genuinely improve scanability, and
+diagrams wherever they add real explanatory value.
+
 Use it to preserve and migrate old Game Maker projects through:
 
 1. Game Maker 4 `.gmd`
