@@ -5,6 +5,16 @@ description: General workflow for migrating legacy Game Maker projects from GM4/
 
 # Migrate GM4/GM5/GMS1.4
 
+## Mandatory: Standalone Documentation
+
+Describe the design, behavior, and ownership that the document specifies. Do not
+argue with earlier drafts, rejected proposals, or conversational alternatives.
+Remove statements whose only purpose is to negate a discarded approach. Keep
+exclusions only when they define a meaningful scope, safety, or compatibility
+boundary for readers without discussion history. Before finishing, read the
+document independently of the conversation and remove draft rebuttals.
+
+
 Use this skill for legacy Game Maker migration work across projects. Keep project-specific discoveries in the target repository's docs or agent guidance unless they generalize across migrations.
 
 This skill must remain generic and reusable across migrations. Do not encode
