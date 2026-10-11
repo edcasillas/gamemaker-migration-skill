@@ -5,6 +5,21 @@ description: General workflow for migrating legacy Game Maker projects from GM4/
 
 # Migrate GM4/GM5/GMS1.4
 
+## Mandatory: Useful Documentation and Design Lifecycle
+
+Keep documentation concise but complete, maintainable, and understandable on first
+reading. Remove filler and duplicate explanations. Discover the project's document
+owners and planning lifecycle before creating or closing feature documents; follow
+its conventions without imposing a universal template, folder layout, or combined
+specification/design format. Define a lightweight local convention when missing.
+
+When feature work is complete and validated, consolidate implemented design,
+runtime details, and reusable contracts into their canonical owner documents.
+Remove completed working documents and repair navigation; preserve genuinely
+unfinished scope as focused open work. Use Git for earlier drafts and delivery
+history rather than creating documentation archives. Current docs explain how
+the game works and how to maintain it.
+
 ## Mandatory: Standalone Documentation
 
 Describe the design, behavior, and ownership that the document specifies. Do not
