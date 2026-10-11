@@ -7,6 +7,13 @@ description: General workflow for migrating legacy Game Maker projects from GM4/
 
 ## Mandatory: Useful Documentation and Design Lifecycle
 
+Canonical documents are named and presented by their purpose and content, not
+how they were produced. A GDD is a Game Design Document whether authored from
+scratch or inferred from code. Keep reconstruction as a working method; omit
+method-based title qualifiers, creation-history introductions, and production
+summaries from the canonical artifact. Retain evidence and uncertainty where they
+help interpret the design, and keep genuine source inventories in their owner.
+
 Keep documentation concise but complete, maintainable, and understandable on first
 reading. Remove filler and duplicate explanations. Discover the project's document
 owners and planning lifecycle before creating or closing feature documents; follow
