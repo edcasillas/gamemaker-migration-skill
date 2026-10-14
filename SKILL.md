@@ -7,6 +7,13 @@ description: General workflow for migrating legacy Game Maker projects from GM4/
 
 ## Mandatory: Useful Documentation and Design Lifecycle
 
+Use the shortest representation that fully explains the behavior or decision.
+Prefer code for simple initialization or direct calls. Add a diagram only when it
+clarifies meaningful interactions, ordering, branching, or structure beyond a
+short snippet or sentence. Do not turn one assignment into several actors and
+arrows. Avoid repeating the same explanation across prose, tables, code, and
+diagrams; retain complementary constraints and link to their owner.
+
 Canonical documents are named and presented by their purpose and content, not
 how they were produced. A GDD is a Game Design Document whether authored from
 scratch or inferred from code. Keep reconstruction as a working method; omit
